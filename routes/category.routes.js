@@ -11,9 +11,9 @@ router.get("/Category/:id", categoryController.getCategory);
 router.post("/Category", isAuth, categoryController.createCategory);
 
 // Put request
-router.put("/Category/:id", categoryController.updateCategory);
+router.put("/Category/:id", isAuth, categoryController.updateCategory);
 
 //Delete request
-router.delete("/Category/:id", categoryController.deleteCategory);
+router.delete("/Category/:id", isAuth, categoryController.deleteCategory);
 
 module.exports = router;

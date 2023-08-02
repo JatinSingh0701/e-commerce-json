@@ -1,6 +1,7 @@
 const express = require("express");
 
-const CategoryRoutes = require("./routes/category.routes");
+const categoryRoutes = require("./routes/category.routes");
+const prodcutRouter = require("./routes/product.routes");
 const authRoutes = require("./routes/auth.routes");
 const sequelize = require("./util/database");
 
@@ -8,7 +9,8 @@ const app = express();
 
 app.use(express.json());
 
-app.use(CategoryRoutes);
+app.use(categoryRoutes);
+app.use(prodcutRouter);
 app.use(authRoutes);
 
 app.use((err, req, res, next) => {

@@ -1,12 +1,12 @@
-const Category = require("../models/categrory.model");
+const product = require("../models/product.model");
 
 // GET request
-exports.getCategories = (req, res, next) => {
-  Category.findAll()
-    .then((categories) => {
+exports.getProducts = (req, res, next) => {
+  product.findAll()
+    .then((products) => {
       res.status(200).json({
-        message: "Categories fetched successfully",
-        categories,
+        message: "products fetched successfully",
+        products,
       });
     })
     .catch((err) => {
@@ -17,20 +17,20 @@ exports.getCategories = (req, res, next) => {
     });
 };
 
-exports.getCategory = (req, res, next) => {
-  Category.findOne({
+exports.getProduct = (req, res, next) => {
+  product.findOne({
     where: {
       id: req.params.id,
     },
   })
-    .then((category) => {
-      if (!category) {
+    .then((product) => {
+      if (!product) {
         return res.status(400).json({
-          message: "Category not found",
+          message: "product not found",
         });
       }
       res.status(200).json({
-        category,
+        product,
       });
     })
     .catch((err) => {
@@ -42,15 +42,16 @@ exports.getCategory = (req, res, next) => {
 };
 
 // POST request
-exports.createCategory = (req, res, next) => {
-  Category.create({
+exports.createProduct = (req, res, next) => {
+  product.create({
     name: req.body.name,
     description: req.body.description,
+    price: req.body.price,
   })
     .then((result) => {
       res.status(201).json({
-        message: "Category created successfully",
-        category: result,
+        message: "product created successfully",
+        product: result,
       });
     })
     .catch((err) => {
@@ -62,26 +63,27 @@ exports.createCategory = (req, res, next) => {
 };
 
 // PUT request
-exports.updateCategory = (req, res, next) => {
-  Category.findOne({
+exports.updateProduct = (req, res, next) => {
+  product.findOne({
     where: {
       id: req.params.id,
     },
   })
-    .then((category) => {
-      if (!category) {
+    .then((product) => {
+      if (!product) {
         return res.status(404).json({
-          message: "Category not found",
+          message: "product not found",
         });
       }
-      category.name = req.body.name;
-      category.description = req.body.description;
-      return category.save();
+      product.name = req.body.name;
+      product.description = req.body.description;
+      product.price = req.body.price;
+      return product.save();
     })
     .then((result) => {
       res.status(200).json({
-        message: "Category updated successfully",
-        category: result,
+        message: "product updated successfully",
+        product: result,
       });
     })
     .catch((err) => {
@@ -93,8 +95,8 @@ exports.updateCategory = (req, res, next) => {
 };
 
 // DELETE request
-exports.deleteCategory = (req, res, next) => {
-  Category.destroy({
+exports.deleteProduct = (req, res, next) => {
+  product.destroy({
     where: {
       id: req.params.id,
     },
@@ -102,11 +104,11 @@ exports.deleteCategory = (req, res, next) => {
     .then((deletedRows) => {
       if (deletedRows === 0) {
         return res.status(404).json({
-          message: "Category not found",
+          message: "product not found",
         });
       }
       res.status(200).json({
-        message: "Category deleted successfully",
+        message: "product deleted successfully",
       });
     })
     .catch((err) => {
