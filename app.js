@@ -1,9 +1,10 @@
 const express = require("express");
-
 const categoryRoutes = require("./routes/category.routes");
 const prodcutRouter = require("./routes/product.routes");
 const authRoutes = require("./routes/auth.routes");
-const sequelize = require("./util/database");
+const order = require("./models/order.model");
+const Product = require("./models/product.model");
+const user = require("./models/user.model");
 
 const app = express();
 
@@ -19,13 +20,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-sequelize
-  .sync()
-  .then((result) => {
-    app.listen(8080, () => {
-      console.log("Server is running on port 8080");
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+Product.belongsToMany(user, { through: order });
+
+module.exports = app;
