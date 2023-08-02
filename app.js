@@ -1,11 +1,15 @@
 const express = require("express");
+
 const CategoryRoutes = require("./routes/category.routes");
+const authRoutes = require("./routes/auth.routes");
 const sequelize = require("./util/database");
 
 const app = express();
 
 app.use(express.json());
+
 app.use(CategoryRoutes);
+app.use(authRoutes);
 
 app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({
@@ -23,4 +27,3 @@ sequelize
   .catch((err) => {
     console.log(err);
   });
-
