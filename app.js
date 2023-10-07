@@ -1,17 +1,19 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const categoryRoutes = require("./routes/category.routes");
-const prodcutRouter = require("./routes/product.routes");
+const productRouter = require("./routes/product.routes");
 const authRoutes = require("./routes/auth.routes");
 const order = require("./models/order.model");
 const Product = require("./models/product.model");
 const user = require("./models/user.model");
-
+const Category = require("./models/categrory.model"); 
 const app = express();
 
-app.use(express.json());
+bodyParser.urlencoded({ extended: false });
+app.use(bodyParser.json());
 
 app.use(categoryRoutes);
-app.use(prodcutRouter);
+app.use(productRouter);
 app.use(authRoutes);
 
 app.use((err, req, res, next) => {
@@ -21,5 +23,18 @@ app.use((err, req, res, next) => {
 });
 
 Product.belongsToMany(user, { through: order });
+Category.hasMany(Product);
 
-module.exports = app;
+const sequelize = require("./util/database");
+const { ExpressValidator } = require("express-validator");
+
+sequelize
+  .sync() //{ force: true }
+  .then((result) => {
+    app.listen(8080, () => {
+      console.log("Server is running on port 8080");
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });

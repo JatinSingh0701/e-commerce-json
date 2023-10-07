@@ -47,6 +47,7 @@ exports.createProduct = (req, res, next) => {
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
+    categoryId: req.body.categoryId,
   })
     .then((result) => {
       res.status(201).json({

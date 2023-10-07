@@ -1,18 +1,39 @@
 const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 
 // Secret key for jwt signing
 const JWT_SECRET = "cat";
 
 // post request for signup
 exports.signup = async (req, res, next) => {
+  const errors = validationResult(req);
+  
+  // if (!errors.isEmpty()) {
+  //   let errors = errors.array();
+  //   if (errors[0].param == "email") {
+  //     const error = new Error("Email is invalid");
+  //     error.statusCode = 422;
+  //     return next(error);
+  //   } else if (errors[0].param == "password") {
+  //     const error = new Error("Password is invalid");
+  //     error.statusCode = 422;
+  //     return next(error);
+  //   }
+  // }
+
   try {
     const existingUser = await userModel.findOne({
       where: {
         email: req.body.email,
       },
     });
+    if (!errors.isEmpty()) {
+      const error = new Error("Email or password is invalid");
+      error.statusCode = 422;
+      return next(error);
+    }
 
     if (existingUser) {
       const error = new Error("User already exists");
