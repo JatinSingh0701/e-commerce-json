@@ -6,8 +6,15 @@ const authRoutes = require("./routes/auth.routes");
 const order = require("./models/order.model");
 const Product = require("./models/product.model");
 const user = require("./models/user.model");
-const Category = require("./models/categrory.model"); 
+const Category = require("./models/categrory.model");
 const app = express();
+
+app.use(express.static(__dirname + "/public"));
+
+
+app.get("/", (req, res) => {
+  res.send("index.html");
+});
 
 bodyParser.urlencoded({ extended: false });
 app.use(bodyParser.json());

@@ -1,9 +1,44 @@
-const product = require("../models/product.model");
+const Product = require("../models/product.model");
+const { body, validationResult } = require("express-validator");
+const { Op } = require("sequelize");
 
 // GET request
 exports.getProducts = (req, res, next) => {
-  product
-    .findAll()
+  let totalItems;
+  let page = req.query.page;
+  let limit = 5;
+  let offset = (page - 1) * limit;
+
+  let minCost = req.query.minCost;
+  let maxCost = req.query.maxCost;
+
+  if (!page) {
+    Product.findAll()
+      .then((products) => {
+        res.status(200).json({
+          message: "products fetched successfully",
+          products,
+        });
+      })
+      .catch((err) => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      });
+    return; // Add return statement to exit the function
+  }
+
+  Product.findAll({
+    where: {
+      price: {
+        [Op.gte]: minCost || Number.MIN_SAFE_INTEGER,
+        [Op.lte]: maxCost || Number.MAX_SAFE_INTEGER,
+      },
+    },
+    limit: limit,
+    offset: offset,
+  })
     .then((products) => {
       res.status(200).json({
         message: "products fetched successfully",
@@ -16,15 +51,18 @@ exports.getProducts = (req, res, next) => {
       }
       next(err);
     });
+
+  Product.count().then((count) => {
+    totalItems = count;
+  });
 };
 
 exports.getProduct = (req, res, next) => {
-  product
-    .findOne({
-      where: {
-        id: req.params.id,
-      },
-    })
+  Product.findOne({
+    where: {
+      id: req.params.id,
+    },
+  })
     .then((product) => {
       if (!product) {
         return res.status(400).json({
@@ -51,13 +89,12 @@ exports.createProduct = (req, res, next) => {
     });
   }
 
-  product
-    .create({
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      categoryId: req.body.categoryId,
-    })
+  Product.create({
+    name: req.body.name,
+    description: req.body.description,
+    price: req.body.price,
+    categoryId: req.body.categoryId,
+  })
     .then((result) => {
       res.status(201).json({
         message: "product created successfully",
@@ -74,12 +111,11 @@ exports.createProduct = (req, res, next) => {
 
 // PUT request
 exports.updateProduct = (req, res, next) => {
-  product
-    .findOne({
-      where: {
-        id: req.params.id,
-      },
-    })
+  Product.findOne({
+    where: {
+      id: req.params.id,
+    },
+  })
     .then((product) => {
       if (!product) {
         return res.status(404).json({
@@ -107,12 +143,11 @@ exports.updateProduct = (req, res, next) => {
 
 // DELETE request
 exports.deleteProduct = (req, res, next) => {
-  product
-    .destroy({
-      where: {
-        id: req.params.id,
-      },
-    })
+  Product.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
     .then((deletedRows) => {
       if (deletedRows === 0) {
         return res.status(404).json({

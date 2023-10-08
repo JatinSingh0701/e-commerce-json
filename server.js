@@ -26,5 +26,6 @@
 //   }
 // }
 
-//https://relevel.com/courses/backend-development-course-0008/schedule/class-details/25cb37d7-d0ba-49d4-8364-2b5ea43f129d?level=2&module=1
-//01:22:30
+//https://relevel.com/courses/backend-development-course-0008/schedule/class-details/cce38709-b4b1-4e96-b565-e9f0801295b7?level=2&module=1
+//stating
+
