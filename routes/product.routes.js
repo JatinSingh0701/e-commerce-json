@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const { body, validationResult } = require("express-validator");
+
 const productController = require("../controllers/product.controller");
 const isAuth = require("../middleware/is.auth");
 
@@ -11,7 +13,12 @@ router.get("/product/:id", productController.getProduct);
 router.post("/product", isAuth, productController.createProduct);
 
 // Put request
-router.put("/product/:id", isAuth, productController.updateProduct);
+router.put(
+  "/product/:id",
+  isAuth,
+  body("name").not().isEmpty(),
+  productController.updateProduct
+);
 
 //Delete request
 router.delete("/product/:id", isAuth, productController.deleteProduct);

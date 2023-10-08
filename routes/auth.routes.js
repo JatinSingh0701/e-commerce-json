@@ -1,12 +1,12 @@
 const router = require("express").Router();
-const { body } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 const authController = require("../controllers/auth.controller");
 
 //Post request for signup
 router.post(
   "/signup",
-  body("email").isEmail(),
-  body("password").isLength({ min: 5 }),
+  body("email").isEmail().withMessage("Email is invalid"),
+  body("password").isLength({ min: 5 }).withMessage("Password is invalid"),
   authController.signup
 );
 

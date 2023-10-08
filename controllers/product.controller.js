@@ -2,7 +2,8 @@ const product = require("../models/product.model");
 
 // GET request
 exports.getProducts = (req, res, next) => {
-  product.findAll()
+  product
+    .findAll()
     .then((products) => {
       res.status(200).json({
         message: "products fetched successfully",
@@ -18,11 +19,12 @@ exports.getProducts = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  product.findOne({
-    where: {
-      id: req.params.id,
-    },
-  })
+  product
+    .findOne({
+      where: {
+        id: req.params.id,
+      },
+    })
     .then((product) => {
       if (!product) {
         return res.status(400).json({
@@ -43,12 +45,19 @@ exports.getProduct = (req, res, next) => {
 
 // POST request
 exports.createProduct = (req, res, next) => {
-  product.create({
-    name: req.body.name,
-    description: req.body.description,
-    price: req.body.price,
-    categoryId: req.body.categoryId,
-  })
+  if (!req.body.name || req.body.name.trim() === "") {
+    return res.status(422).json({
+      message: "Name cannot be empty",
+    });
+  }
+
+  product
+    .create({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      categoryId: req.body.categoryId,
+    })
     .then((result) => {
       res.status(201).json({
         message: "product created successfully",
@@ -65,11 +74,12 @@ exports.createProduct = (req, res, next) => {
 
 // PUT request
 exports.updateProduct = (req, res, next) => {
-  product.findOne({
-    where: {
-      id: req.params.id,
-    },
-  })
+  product
+    .findOne({
+      where: {
+        id: req.params.id,
+      },
+    })
     .then((product) => {
       if (!product) {
         return res.status(404).json({
@@ -97,11 +107,12 @@ exports.updateProduct = (req, res, next) => {
 
 // DELETE request
 exports.deleteProduct = (req, res, next) => {
-  product.destroy({
-    where: {
-      id: req.params.id,
-    },
-  })
+  product
+    .destroy({
+      where: {
+        id: req.params.id,
+      },
+    })
     .then((deletedRows) => {
       if (deletedRows === 0) {
         return res.status(404).json({
