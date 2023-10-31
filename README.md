@@ -1,4 +1,3 @@
-Sure, I have removed the Acknowledgments section and customized the README with your provided email ID. Here's the updated version:
 
 # E-Commerce Application
 
